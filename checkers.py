@@ -62,8 +62,8 @@ class Piece:
         pygame.draw.circle(win, GRAY, (self.x, self.y), radius + 2)
         pygame.draw.circle(win, RED if self.color == 'red' else BLACK, (self.x, self.y), radius)
         if self.king:
-            # Create a small white circle in the middle to represent a king
-            pygame.draw.circle(win, WHITE, (self.x, self.y), radius // 2)
+            # Draw the crown image for king pieces
+            win.blit(CROWN, (self.x - CROWN.get_width() // 2, self.y - CROWN.get_height() // 2))
             
     def move(self, row, col):
         """Move the piece to a new position."""
@@ -633,7 +633,6 @@ class Game:
                     for from_pos, moves in self.valid_moves.items():
                         if from_pos == (row, col):
                             has_moves = True
-                            print(f"  Valid moves: {list(moves.keys())}")
                             break
                     if not has_moves:
                         print(f"  No valid moves for this piece")
@@ -661,11 +660,9 @@ class Game:
             if not self.waiting_for_player:
                 self.valid_moves = self.board.get_all_valid_moves(self.current_color)
                 
-                # Print current turn and valid moves
-                print(f"\n{self.current_color.capitalize()}'s turn")
-                if self.valid_moves:
-                    print(f"Valid moves: {[(pos, list(moves.keys())) for pos, moves in self.valid_moves.items()]}")
-                else:
+            # Print current turn and valid moves
+            if not self.waiting_for_player:
+                if not self.valid_moves:
                     print("No valid moves available")
                 
                 # Check if the game is over
